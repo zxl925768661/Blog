@@ -442,5 +442,161 @@ var reorderList = function (head) {
   }
 };
 
+function hotPotato(nameList, num) {
+  var queue = new Queue();
+  for (var i = 0; i < nameList.length; i++) {
+    queue.enqueue(nameList[i]); // 加入队列
+  }
+  var eliminated = "";
+  while (queue.size() > 1) {
+    for (var i = 0; i < num; i++) {
+      queue.enqueue(queue.dequeue()); // 从队列开头移 除一项，再将其添加到队列末尾
+    }
+    eliminated = queue.dequeue(); // 从队列中移除
+    console.log(eliminated + "在击鼓传花游戏中被淘汰。");
+  }
+  return queue.dequeue();
+}
+
+var names = ["Aa", "Bb", "Cc", "Dd", "Ee"];
+var winner = hotPotato(names, 7);
+console.log("胜利者:" + winner);
+
+// Cc在击鼓传花游戏中被淘汰。
+// Bb在击鼓传花游戏中被淘汰。
+// Ee在击鼓传花游戏中被淘汰。
+// Dd在击鼓传花游戏中被淘汰。
+// 胜利者:Aa
+
+const sleepCb = (cb, time) => {
+  setTimeout(cb, time);
+};
+sleepCb(() => {
+  console.log("cb");
+}, 1000);
+
+// Promise
+const sleep = (time) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
+sleep(1000).then(() => {
+  console.log("Promise");
+});
+
+// Generator
+function* sleepGenerator(time) {
+  yield new Promise((resolve) => setTimeout(resolve, time));
+}
+sleepGenerator(1000)
+  .next()
+  .value.then(() => {
+    console.log("Generator");
+  });
+
+// async await
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+async function sleepAsync() {
+  await sleep(1000);
+  console.log("async");
+}
+sleepAsync();
+
+var removeDuplicates = function (s, k) {
+  if (s.length <= 1) {
+    return s;
+  }
+  const stack = [];
+  for (const ch of s) {
+    let prev = stack.pop();
+    if (!prev || prev[0] !== ch) {
+      stack.push(prev);
+      stack.push(ch);
+    } else if (prev.length < k - 1) {
+      stack.push(prev + k);
+    }
+  }
+  return stack.join("");
+};
+
+this.removeAt = function (position) {
+  //检查是否越界
+  if (position > -1 && position < length) {
+    var current = head,
+      previous,
+      index = 0;
+    // 移除第一项
+    if (position === 0) {
+      head = current.next;
+    } else {
+      while (index++ < position) {
+        previous = current;
+        current = current.next;
+      }
+      //将previous与current下一项链接起来，跳过current，从而移除它
+      previous.next = current.next;
+    }
+    // 更新列表的长度
+    length--;
+    return current.element;
+  } else {
+    return null;
+  }
+};
+
+this.insert = function (position, element) {
+  // 检查越界值
+  if (position >= 0 && position <= length) {
+    var node = new Node(element),
+      current = head,
+      previous,
+      index = 0;
+    if (position === 0) {
+      // 在第一个位置添加
+      node.next = current;
+      head = node;
+    } else {
+      // 找到目标位置
+      while (index++ < position) {
+        previous = current;
+        current = current.next;
+      }
+      node.next = current;
+      previous.next = node;
+    }
+    // 更新列表的长度
+    length++;
+    return true;
+  } else {
+    return false;
+  }
+};
+
+this.remove = function (element) {
+  var index = this.indexOf(element);
+  return this.removeAt(index);
+};
 
 
+/**
+ * @param {string} num1
+ * @param {string} num2
+ * @return {string}
+ */
+var addStrings = function (num1, num2) {
+  let i = num1.length,
+    j = num2.length,
+    result = 0, 
+    add = 0;  // 表示进位
+  while (i || b) {
+    a ? add += +num1[--i]: '';
+    b ? add += num2[--j]: '';
+
+    result = add % 10 + result;
+    if (add > 9) add = 1
+    else add = 0
+  }
+  if(add) result = 1 + result;
+  return result
+};
