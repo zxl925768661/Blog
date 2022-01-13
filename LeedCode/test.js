@@ -1,19 +1,4 @@
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-var reverseList = function (head) {
-  var prev = null,
-    curr = head,
-    next = null;
-  while (curr != null) {
-    next = curr.next;
-    curr.next = prev;
-    prev = curr;
-    curr = next;
-  }
-  return prev;
-};
+
 
 var reverseList = function (head) {
   if (head == null || head.next == null) {
@@ -578,25 +563,92 @@ this.remove = function (element) {
   return this.removeAt(index);
 };
 
-
 /**
- * @param {string} num1
- * @param {string} num2
- * @return {string}
+ *
+ * @param input
+ * @param depth
+ * @param strict
+ * @param output
  */
-var addStrings = function (num1, num2) {
-  let i = num1.length,
-    j = num2.length,
-    result = 0, 
-    add = 0;  // 表示进位
-  while (i || b) {
-    a ? add += +num1[--i]: '';
-    b ? add += num2[--j]: '';
-
-    result = add % 10 + result;
-    if (add > 9) add = 1
-    else add = 0
+function flatten$1(input, depth, strict, output) {
+  output = output || [];
+  // 如果depth为undefined、false则表示
+  if (!depth && depth !== 0) {
+    depth = Infinity;
+  } else if (depth <= 0) {
+    return output.concat(input);
   }
-  if(add) result = 1 + result;
-  return result
-};
+  var idx = output.length;
+  for (var i = 0, length = getLength(input); i < length; i++) {
+    var value = input[i];
+    // 数组 或者 arguments且length 属性值是不大于 Number.MAX_SAFE_INTEGER 的自然数
+    if (isArrayLike(value) && (isArray(value) || isArguments$1(value))) {
+      // Flatten current level of array or arguments object.
+      if (depth > 1) {
+        flatten$1(value, depth - 1, strict, output);
+        idx = output.length;
+      } else {
+        var j = 0,
+          len = value.length;
+        while (j < len) output[idx++] = value[j++];
+      }
+    } else if (!strict) {
+      output[idx++] = value;
+    }
+  }
+  return output;
+}
+
+function flatten(array, depth) {
+  return flatten$1(array, depth, false);
+}
+
+function cb(value, context, argCount) {
+  if (value == null) return identity;
+  if (isFunction$1(value)) return optimizeCb(value, context, argCount);
+  if (isObject(value) && !isArray(value)) return matcher(value);
+  return property(value);
+}
+
+function identity(value) {
+  return value;
+}
+
+function optimizeCb(func, context, argCount) {
+  if (context === void 0) return func;
+  switch (argCount == null ? 3 : argCount) {
+    case 1:
+      return function (value) {
+        return func.call(context, value);
+      };
+    // The 2-argument case is omitted because we’re not using it.
+    case 3:
+      return function (value, index, collection) {
+        return func.call(context, value, index, collection);
+      };
+    case 4:
+      return function (accumulator, value, index, collection) {
+        return func.call(context, accumulator, value, index, collection);
+      };
+  }
+  return function () {
+    return func.apply(context, arguments);
+  };
+}
+
+function matcher(attrs) {
+  attrs = extendOwn({}, attrs);
+  return function (obj) {
+    return isMatch(obj, attrs);
+  };
+}
+
+function keys(obj) {
+  if (!isObject(obj)) return [];
+  if (nativeKeys) return nativeKeys(obj);
+  var keys = [];
+  for (var key in obj) if (has$1(obj, key)) keys.push(key);
+  // Ahem, IE < 9.
+  if (hasEnumBug) collectNonEnumProps(obj, keys);
+  return keys;
+}
