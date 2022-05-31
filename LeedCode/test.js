@@ -1,595 +1,84 @@
 
 
-var reverseList = function (head) {
-  if (head == null || head.next == null) {
-    return head;
-  }
-  const newHead = reverseList(head.next);
-  head.next.next = head;
-  head.next = null;
-  return newHead;
-};
 
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-var oddEvenList = function (head) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  var odd = head,
-    even = head.next,
-    evenHead = head.next;
-  while (even != null && even.next != null) {
-    odd.next = odd.next.next;
-    odd = odd.next;
-    even.next = even.next.next;
-    even = even.next;
-  }
-  odd.next = evenHead;
-  return head;
-};
 
-/**
- * Definition for singly-linked list.
- */
 
-function ListNode(val, next) {
-  this.val = val === undefined ? 0 : val;
-  this.next = next === undefined ? null : next;
-}
 
-/**
- * @param {ListNode} list1
- * @param {number} a
- * @param {number} b
- * @param {ListNode} list2
- * @return {ListNode}
- */
-var mergeInBetween = function (list1, a, b, list2) {
-  var dummy = new ListNode(0, list1);
-  var prev,
-    curr = list1;
-  for (var i = 1; i <= a; i++) {
-    prev = curr;
-    curr = curr.next;
-  }
-  for (var j = a; j <= b; j++) {
-    curr = curr.next;
-  }
-  var tail = list2;
-  while (tail.next != null) {
-    tail = tail.next;
-  }
-  prev.next = list2;
-  tail.next = curr;
-  return dummy.next;
-};
 
-var list1 = new ListNode(0);
-list1.next = new ListNode(1);
-list1.next.next = new ListNode(2);
-list1.next.next.next = new ListNode(3);
-list1.next.next.next.next = new ListNode(4);
-list1.next.next.next.next.next = new ListNode(5);
 
-var list2 = new ListNode(10001);
-list2.next = new ListNode(10002);
-list2.next.next = new ListNode(10003);
 
-mergeInBetween(list1, 3, 4, list2);
 
-var insertionSortList = function (head) {
-  // 1. 首先判断给定的链表是否为空，若为空，则不需要进行排序，直接返回
-  if (head === null) {
-    return head;
-  }
-  // 2. 链表初始化操作
-  const dummyHead = new ListNode(0); // 引入哑节点
-  dummyHead.next = head;
-  let lastSorted = head, // 维护lastSorted为链表已经排好序的最后一个节点并初始化
-    curr = head.next; // 维护curr 为待插入的元素并初始化
-
-  // 3. 插入排序
-  while (curr !== null) {
-    if (lastSorted.val <= curr.val) {
-      // 说明curr应该位于lastSorted之后
-      lastSorted = lastSorted.next; // 将lastSorted后移一位,curr变成新的lastSorted
-    } else {
-      // 否则,从链表头结点开始向后遍历链表中的节点
-      let prev = dummyHead; // 从链表头开始遍历 prev是插入节点curr位置的前一个节点
-      while (prev.next.val <= curr.val) {
-        // 循环退出的条件是找到curr应该插入的位置
-        prev = prev.next;
-      }
-      // 以下三行是为了完成对curr的插入
-      lastSorted.next = curr.next;
-      curr.next = prev.next;
-      prev.next = curr;
-    }
-    // 此时 curr 为下一个待插入的元素
-    curr = lastSorted.next;
-  }
-  // 返回排好序的链表
-  return dummyHead.next;
-};
-
-// 合并有序链表
-var merge = function (head1, head2) {
-  var dummy = new ListNode();
-  var curr = dummy,
-    h1 = head1,
-    h2 = head2;
-  while (h1 !== null && h2 !== null) {
-    if (h1.val <= h2.val) {
-      curr.next = h1;
-      h1 = h1.next;
-    } else {
-      curr.next = h2;
-      h2 = h2.next;
-    }
-    curr = curr.next;
-  }
-  // if (h1 !== null) {
-  //   curr.next = h1;
-  // }
-  // if (h2 !== null) {
-  //   curr.next = h2;
-  // }
-  // 有未合并完的，直接将链表末尾指向未合并完的链表即可
-  curr.next = h1 !== null ? h1 : h2;
-  return dummy.next;
-};
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-var sortList = function (head) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  var slow = head,
-    fast = head.next;
-  // 使用 fast,slow 快慢双指针法，奇数个节点找到中点，偶数个节点找到中心左边的节点
-  while (fast !== null && fast.next !== null) {
-    fast = fast.next.next;
-    slow = slow.next;
-  }
-  var mid = slow.next;
-  // 将链表切断
-  slow.next = null;
-  return merge(sortList(head), sortList(mid));
-};
-
-/**
- * @param {ListNode} head
- * @param {number} x
- * @return {ListNode}
- */
-var partition = function (head, x) {
-  var small = new ListNode(0);
-  var smallHead = small;
-  var large = new ListNode(0);
-  var largeHead = large;
-  while (head !== null) {
-    if (head.val < x) {
-      small.next = head;
-      small = small.next;
-    } else {
-      large.next = head;
-      large = large.next;
-    }
-    head = head.next;
-  }
-  large.next = null;
-  small.next = largeHead.next;
-  return smallHead.next;
-};
-
-/**
- * @param {ListNode} head
- * @param {number} k
- * @return {ListNode}
- */
-var swapNodes = function (head, k) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  var dummy = new ListNode(0, head);
-  var kNodePre = dummy,
-    lastKNodePre = dummy,
-    slow = head,
-    fast = head;
-  // kNodePre指正数第 k 个节点前一个节点，即第 k - 1个节点
-  for (var i = 1; i < k; i++) {
-    kNodePre = fast;
-    fast = fast.next;
-  }
-  // kNode指正数第 k 个节点
-  var kNode = fast;
-  // fast指针走到头时， slow指向倒数第 k 个节点
-  // lastKNodePre指倒数第 k 个节点前一个节点
-  while (fast !== null && fast.next !== null) {
-    lastKNodePre = slow;
-    slow = slow.next;
-    fast = fast.next;
-  }
-  // 正数第 k 个节点 与 倒数第 k 个节点 是同一个时， 不用交换，直接返回; 如 head = [1,2,3,4,5], k = 3
-  if (kNode === slow) {
-    return dummy.next;
-  } else if (kNode.next === slow) {
-    // 两个节点相邻; 如 head = [1,2], k = 1
-    kNode.next = slow.next;
-    slow.next = kNode;
-    kNodePre.next = slow;
-  } else if (slow.next === kNode) {
-    // 两个节点相邻; 如 head = [1,2], k = 2
-    slow.next = kNode.next;
-    kNode.next = slow;
-    lastKNodePre.next = kNode;
-  } else {
-    var tmp = slow.next;
-    kNodePre.next = slow;
-    lastKNodePre.next = kNode;
-    slow.next = kNode.next;
-    kNode.next = tmp;
-  }
-  return dummy.next;
-};
-
-var swapNodes = function (head, k) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  var dummy = new ListNode(0, head);
-  var kNodePre = dummy,
-    kNode,
-    lastKNode;
-  // kNodePre指正数第 k 个节点前一个节点，即第 k - 1个节点
-  for (var i = 1; i < k; i++) {
-    kNodePre = kNodePre.next;
-  }
-  var slow = dummy,
-    fast = kNodePre.next;
-  // 此时slow指向倒数第 k-1 个节点
-  while (fast.next != null) {
-    fast = fast.next;
-    slow = slow.next;
-  }
-
-  if (kNodePre != slow) {
-    // kNode指正数第 k 个节点
-    kNode = kNodePre.next;
-    // lastKNode指向倒数第 k 个节点
-    lastKNode = slow.next;
-    slow.next = kNode;
-    kNodePre.next = lastKNode;
-    var tmp = lastKNode.next;
-    lastKNode.next = kNode.next;
-    kNode.next = tmp;
-  }
-  return dummy.next;
-};
-
-var swapNodes = function (head, k) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  var dummy = new ListNode(0, head);
-  var curr = dummy,
-    arr = [];
-  while (curr !== null) {
-    arr.push(curr);
-    curr = curr.next;
-  }
-  [kNode, lastKNode] = [lastKNode, kNode];
-  return dummy.next;
-};
-
-function ListNode(val, next) {
-  this.val = val === undefined ? 0 : val;
-  this.next = next === undefined ? null : next;
-}
-var list1 = new ListNode(1);
-list1.next = new ListNode(2);
-list1.next.next = new ListNode(3);
-list1.next.next.next = new ListNode(4);
-list1.next.next.next.next = new ListNode(5);
-
-/**
- * @param {ListNode} head
- * @return {void} Do not return anything, modify head in-place instead.
- */
-var reorderList = function (head) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  var list = [],
-    curr = head;
-  while (curr !== null) {
-    list.push(curr);
-    curr = curr.next;
-  }
-  var i = 0,
-    j = list.length - 1;
-  while (i < j) {
-    list[i].next = list[j];
-    i++;
-    if (i == j) {
-      break;
-    }
-    list[j].next = list[i];
-    j--;
-  }
-  list[i].next = null;
-};
-
-/**
- * @param {ListNode} head
- * @return {void} Do not return anything, modify head in-place instead.
- */
-var reorderList = function (head) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  var mid = middleNode(head);
-  var l1 = head;
-  var l2 = mid.next;
-  mid.next = null;
-  l2 = reverseList(l2);
-  mergeList(l1, l2);
-};
-
-var mergeList = function (list1, list2) {
-  var tmp1, tmp2;
-  while (list1 != null && list2 != null) {
-    tmp1 = list1.next;
-    tmp2 = list2.next;
-
-    list1.next = list2;
-    list1 = tmp1;
-
-    list2.next = list1;
-    list2 = tmp2;
-  }
-};
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-var reverseList = function (head) {
-  var prev = null,
-    curr = head,
-    next = null;
-  while (curr != null) {
-    next = curr.next;
-    curr.next = prev;
-    prev = curr;
-    curr = next;
-  }
-  return prev;
-};
-
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-var middleNode = function (head) {
-  if (head === null) {
-    return null;
-  }
-  let slow = head,
-    fast = head.next;
-  while (fast !== null && fast.next !== null) {
-    fast = fast.next.next;
-    slow = slow.next;
-  }
-  return slow;
-};
-
-/**
- * @param {ListNode} head
- * @return {void} Do not return anything, modify head in-place instead.
- */
-var reorderList = function (head) {
-  if (head === null || head.next === null) {
-    return head;
-  }
-  // 1. 找中点，使用 fast,slow 快慢双指针法，奇数个节点找到中点，偶数个节点找到中心左边的节点
-  var slow = head,
-    fast = head.next;
-  while (fast != null && fast.next != null) {
-    slow = slow.next;
-    fast = fast.next.next;
-  }
-  // 2. 断开中点，反转后半部分
-  var head2 = null,
-    next = slow.next;
-  slow.next = null;
-  slow = next;
-  while (slow != null) {
-    next = slow.next;
-    slow.next = head2;
-    head2 = slow;
-    slow = next;
-  }
-
-  // 3. 合并链表head和head2
-  var curr = head;
-  var curr2 = head2;
-  while (curr != null && curr2 != null) {
-    next = curr.next;
-    curr.next = curr2;
-    curr2 = curr2.next;
-    curr.next.next = next;
-    curr = next;
-  }
-};
-
-function hotPotato(nameList, num) {
-  var queue = new Queue();
-  for (var i = 0; i < nameList.length; i++) {
-    queue.enqueue(nameList[i]); // 加入队列
-  }
-  var eliminated = "";
-  while (queue.size() > 1) {
-    for (var i = 0; i < num; i++) {
-      queue.enqueue(queue.dequeue()); // 从队列开头移 除一项，再将其添加到队列末尾
-    }
-    eliminated = queue.dequeue(); // 从队列中移除
-    console.log(eliminated + "在击鼓传花游戏中被淘汰。");
-  }
-  return queue.dequeue();
-}
-
-var names = ["Aa", "Bb", "Cc", "Dd", "Ee"];
-var winner = hotPotato(names, 7);
-console.log("胜利者:" + winner);
-
-// Cc在击鼓传花游戏中被淘汰。
-// Bb在击鼓传花游戏中被淘汰。
-// Ee在击鼓传花游戏中被淘汰。
-// Dd在击鼓传花游戏中被淘汰。
-// 胜利者:Aa
-
-const sleepCb = (cb, time) => {
-  setTimeout(cb, time);
-};
-sleepCb(() => {
-  console.log("cb");
-}, 1000);
-
-// Promise
-const sleep = (time) => {
-  return new Promise((resolve) => setTimeout(resolve, time));
-};
-sleep(1000).then(() => {
-  console.log("Promise");
+var difference = restArguments(function(array, rest) {
+  rest = flatten$1(rest, true, true);
+  return filter(array, function(value){
+    return !contains(rest, value);
+  });
 });
 
-// Generator
-function* sleepGenerator(time) {
-  yield new Promise((resolve) => setTimeout(resolve, time));
-}
-sleepGenerator(1000)
-  .next()
-  .value.then(() => {
-    console.log("Generator");
+/**
+ * 遍历list中的每个值，返回所有通过predicate真值检测的元素所组成的数组
+ * @param {object|array} obj 
+ * @param {*} predicate 
+ * @param {*} context 
+ */
+function filter(obj, predicate, context) {
+  var results = [];
+  // 根据 this 指向，返回 predicate 函数（判断函数）
+  predicate = cb(predicate, context);
+  each(obj, function(value, index, list) {
+    // 遍历每个元素，如果符合条件则存入数组
+    if (predicate(value, index, list)) results.push(value);
   });
-
-// async await
-function sleep(time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
+  return results;
 }
-async function sleepAsync() {
-  await sleep(1000);
-  console.log("async");
+
+function each(obj, iteratee, context) {
+  iteratee = optimizeCb(iteratee, context);
+  var i, length;
+  if (isArrayLike(obj)) {
+    for (i = 0, length = obj.length; i < length; i++) {
+      iteratee(obj[i], i, obj);
+    }
+  } else {
+    var _keys = keys(obj);
+    for (i = 0, length = _keys.length; i < length; i++) {
+      iteratee(obj[_keys[i]], _keys[i], obj);
+    }
+  }
+  return obj;
 }
-sleepAsync();
 
-var removeDuplicates = function (s, k) {
-  if (s.length <= 1) {
-    return s;
-  }
-  const stack = [];
-  for (const ch of s) {
-    let prev = stack.pop();
-    if (!prev || prev[0] !== ch) {
-      stack.push(prev);
-      stack.push(ch);
-    } else if (prev.length < k - 1) {
-      stack.push(prev + k);
-    }
-  }
-  return stack.join("");
-};
 
-this.removeAt = function (position) {
-  //检查是否越界
-  if (position > -1 && position < length) {
-    var current = head,
-      previous,
-      index = 0;
-    // 移除第一项
-    if (position === 0) {
-      head = current.next;
-    } else {
-      while (index++ < position) {
-        previous = current;
-        current = current.next;
-      }
-      //将previous与current下一项链接起来，跳过current，从而移除它
-      previous.next = current.next;
-    }
-    // 更新列表的长度
-    length--;
-    return current.element;
-  } else {
-    return null;
-  }
-};
-
-this.insert = function (position, element) {
-  // 检查越界值
-  if (position >= 0 && position <= length) {
-    var node = new Node(element),
-      current = head,
-      previous,
-      index = 0;
-    if (position === 0) {
-      // 在第一个位置添加
-      node.next = current;
-      head = node;
-    } else {
-      // 找到目标位置
-      while (index++ < position) {
-        previous = current;
-        current = current.next;
-      }
-      node.next = current;
-      previous.next = node;
-    }
-    // 更新列表的长度
-    length++;
-    return true;
-  } else {
-    return false;
-  }
-};
-
-this.remove = function (element) {
-  var index = this.indexOf(element);
-  return this.removeAt(index);
-};
 
 /**
- *
- * @param input
- * @param depth
- * @param strict
- * @param output
+ * 
+ * @param {*} input 
+ * @param {*} depth 
+ * @param {*} strict 
+ * @param {*} output 
  */
 function flatten$1(input, depth, strict, output) {
   output = output || [];
-  // 如果depth为undefined、false则表示
+  // depth为undefined、false
   if (!depth && depth !== 0) {
     depth = Infinity;
   } else if (depth <= 0) {
     return output.concat(input);
   }
   var idx = output.length;
-  for (var i = 0, length = getLength(input); i < length; i++) {
+  for (var i = 0, length = input.length; i < length; i++) {
     var value = input[i];
     // 数组 或者 arguments且length 属性值是不大于 Number.MAX_SAFE_INTEGER 的自然数
     if (isArrayLike(value) && (isArray(value) || isArguments$1(value))) {
       // Flatten current level of array or arguments object.
       if (depth > 1) {
+        // 递归展开
         flatten$1(value, depth - 1, strict, output);
         idx = output.length;
       } else {
         var j = 0,
           len = value.length;
+        // 将 value 数组的元素添加到 output 数组中
         while (j < len) output[idx++] = value[j++];
       }
     } else if (!strict) {
@@ -603,52 +92,310 @@ function flatten(array, depth) {
   return flatten$1(array, depth, false);
 }
 
-function cb(value, context, argCount) {
-  if (value == null) return identity;
-  if (isFunction$1(value)) return optimizeCb(value, context, argCount);
-  if (isObject(value) && !isArray(value)) return matcher(value);
-  return property(value);
-}
 
-function identity(value) {
-  return value;
-}
 
-function optimizeCb(func, context, argCount) {
-  if (context === void 0) return func;
-  switch (argCount == null ? 3 : argCount) {
-    case 1:
-      return function (value) {
-        return func.call(context, value);
-      };
-    // The 2-argument case is omitted because we’re not using it.
-    case 3:
-      return function (value, index, collection) {
-        return func.call(context, value, index, collection);
-      };
-    case 4:
-      return function (accumulator, value, index, collection) {
-        return func.call(context, accumulator, value, index, collection);
-      };
+function values(obj) {
+  var _keys = keys(obj);
+  var length = _keys.length;
+  var values = Array(length);
+  for (var i = 0; i < length; i++) {
+    values[i] = obj[_keys[i]];
   }
-  return function () {
-    return func.apply(context, arguments);
+  return values;
+}
+/**
+ * 如果obj包含指定的item则返回true（使用===检测）。如果obj 是数组，内部使用indexOf判断。使用fromIndex来给定开始检索的索引位置。
+ * @param {array|object} obj 
+ * @param {*} item 包含项
+ * @param {*} fromIndex  开始检索的索引位置
+ * @param {*} guard 
+ */
+function contains(obj, item, fromIndex, guard) {
+  // 如果是对象，返回 values 组成的数组
+  if (!isArrayLike(obj)) obj = values(obj);
+  // 如果没有指定该参数，则默认从头找起
+  if (typeof fromIndex != 'number' || guard) fromIndex = 0;
+  // 使用indexOf寻找
+  return indexOf(obj, item, fromIndex) >= 0;
+}
+
+function intersection(array) {
+  var result = [];
+  var argsLength = arguments.length;
+  for (var i = 0, length = array.length; i < length; i++) {
+    var item = array[i];
+    // 返回的 result 是去重的
+    if (contains(result, item)) continue;
+    var j;
+    // 判断其他参数数组中是否都有 item 这个元素
+    for (j = 1; j < argsLength; j++) {
+      if (!contains(arguments[j], item)) break;
+    }
+    if (j === argsLength) result.push(item);
+  }
+  return result;
+}
+
+/**
+ * 返回 array去重后的副本, 使用 === 做相等测试. 
+ * 如果 array 已经排序, 那么给 isSorted 参数传递 true值, 此函数将运行的更快的算法. 
+ * 如果要处理对象元素, 传递 iteratee函数来获取要对比的属性
+ * @param {array} array 
+ * @param {*} isSorted 
+ * @param {*} iteratee 
+ * @param {*} context 
+ */
+function uniq(array, isSorted, iteratee, context) {
+  if (!isBoolean(isSorted)) {
+    context = iteratee;
+    iteratee = isSorted;
+    isSorted = false;
+  }
+  if (iteratee != null) iteratee = cb(iteratee, context);
+  var result = [];
+  var seen = [];
+  for (var i = 0, length = array.length; i < length; i++) {
+    var value = array[i],
+        computed = iteratee ? iteratee(value, i, array) : value;
+    if (isSorted && !iteratee) {
+      if (!i || seen !== computed) result.push(value);
+      seen = computed;
+    } else if (iteratee) {
+      if (!contains(seen, computed)) {
+        seen.push(computed);
+        result.push(value);
+      }
+    } else if (!contains(result, value)) {
+      result.push(value);
+    }
+  }
+  return result;
+}
+
+
+/**
+ * 缓存某函数的计算结果
+ * @param {*} func 
+ * @param {?function} hasher 返回值作为key存储函数的计算结果
+ */
+function memoize(func, hasher) {
+  var memoize = function(key) {
+    var cache = memoize.cache;
+    var address = '' + (hasher ? hasher.apply(this, arguments) : key);
+    if (!has$1(cache, address)) cache[address] = func.apply(this, arguments);
+    return cache[address];
+  };
+  memoize.cache = {};
+  return memoize;
+}
+
+var fibonacci = function(n) {
+  return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+};
+
+fibonacci = _.memoize(fibonacci);
+
+
+var nativeCreate = Object.create;
+
+function ctor() {
+  return function(){};
+}
+
+function baseCreate(prototype) {
+  // 如果 prototype 参数不是对象
+  if (!isObject(prototype)) return {};
+  // 如果浏览器支持 ES5 Object.create
+  if (nativeCreate) return nativeCreate(prototype);
+  var Ctor = ctor();
+  Ctor.prototype = prototype;
+  var result = new Ctor;
+  Ctor.prototype = null;
+  return result;
+}
+
+function executeBound(sourceFunc, boundFunc, context, callingContext, args) {
+  if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
+  var self = baseCreate(sourceFunc.prototype);
+  // 用 new 生成一个构造函数的实例
+  // 正常情况下是没有返回值的，即 result 值为 undefined
+  // 如果构造函数有返回值
+  // 如果返回值是对象（非 null），则 new 的结果返回这个对象
+  // 否则返回实例
+  var result = sourceFunc.apply(self, args);
+  // 如果构造函数返回了对象
+  // 则 new 的结果是这个对象
+  // 返回这个对象
+  if (isObject(result)) return result;
+  return self;
+}
+
+var bind = restArguments(function(func, context, args) {
+  // 如果传入的参数 func 不是方法，则抛出错误
+  if (!isFunction$1(func)) throw new TypeError('Bind must be called on a function');
+  var bound = restArguments(function(callArgs) {
+    return executeBound(func, bound, context, this, args.concat(callArgs));
+  });
+  return bound;
+});
+
+
+var bindAll = restArguments(function(obj, keys) {
+  keys = flatten$1(keys, false, false);
+  var index = keys.length;
+  if (index < 1) throw new Error('bindAll must be passed function names');
+  while (index--) {
+    var key = keys[index];
+    obj[key] = bind(obj[key], obj);
+  }
+  return obj;
+});
+
+
+/**
+ * 局部应用一个函数填充在任意个数的 arguments，不改变其动态this值
+ */
+var partial = restArguments(function(func, boundArgs) {
+  var placeholder = partial.placeholder;
+  var bound = function() {
+    var position = 0, length = boundArgs.length;
+    var args = Array(length);
+    for (var i = 0; i < length; i++) {
+      args[i] = boundArgs[i] === placeholder ? arguments[position++] : boundArgs[i];
+    }
+    while (position < arguments.length) args.push(arguments[position++]);
+    return executeBound(func, bound, this, this, args);
+  };
+  return bound;
+});
+
+partial.placeholder = _$1;
+
+/**
+ * 类似setTimeout，等待wait毫秒后调用function。
+ */
+var delay = restArguments(function(func, wait, args) {
+  return setTimeout(function() {
+    return func.apply(null, args);
+  }, wait);
+});
+
+/**
+ * 延迟调用function直到当前调用栈清空为止，类似使用延时为0的setTimeout方法
+ */
+var defer = partial(delay, _$1, 1);
+
+/**
+ * 创建一个函数, 只有在运行了 count 次之后才有效果. 
+ * 在处理同组异步请求返回结果时, 如果你要确保同组里所有异步请求完成之后才 执行这个函数，这将非常有用
+ * @param {*} times 
+ * @param {*} func 
+ */
+function after(times, func) {
+  return function() {
+    if (--times < 1) {
+      return func.apply(this, arguments);
+    }
   };
 }
 
-function matcher(attrs) {
-  attrs = extendOwn({}, attrs);
-  return function (obj) {
-    return isMatch(obj, attrs);
+/**
+ * 创建一个函数,调用不超过count 次。 
+ * 当count已经达到时，最后一个函数调用的结果将被记住并返回
+ * @param {*} times 
+ * @param {*} func 
+ */
+function before(times, func) {
+  var memo;
+  return function() {
+    if (--times > 0) {
+      memo = func.apply(this, arguments);
+    }
+    if (times <= 1) func = null;
+    return memo;
   };
 }
 
-function keys(obj) {
-  if (!isObject(obj)) return [];
-  if (nativeKeys) return nativeKeys(obj);
-  var keys = [];
-  for (var key in obj) if (has$1(obj, key)) keys.push(key);
-  // Ahem, IE < 9.
-  if (hasEnumBug) collectNonEnumProps(obj, keys);
-  return keys;
+
+/**
+ * 创建一个只能调用一次的函数
+ */
+var once = partial(before, 2);
+
+/**
+ * 将第一个函数 function 封装到函数 wrapper 里面, 并把函数 function 作为第一个参数传给 wrapper. 
+ * 这样可以让 wrapper 在 function 运行之前和之后 执行代码, 调整参数然后附有条件地执行
+ * @param {*} func 
+ * @param {*} wrapper 
+ */
+function wrap(func, wrapper) {
+  return partial(wrapper, func);
 }
+
+
+var testBefore = function(beforeAmount, timesCalled) {
+  var beforeCalled = 0;
+  var before = _.before(beforeAmount, function() { beforeCalled++; });
+  while (timesCalled--) before();
+  return beforeCalled;
+};
+
+function add (a, b) {
+  return a + b;
+}
+// 执行 add 函数，一次传入两个参数即可
+add(1, 2) // 3
+
+// 假设有一个 partial 函数可以做到局部应用
+var addOne = partial(add, 1);
+addOne(2);  // 3
+
+
+
+function chainResult(instance, obj) {
+  return instance._chain ? _$1(obj).chain() : obj;
+}
+
+
+
+
+
+var defaults = function (obj) {
+  var length = arguments.length, obj = Object(obj);
+  if (length < 2 || obj == null) return obj;
+    for (var index = 1; index < length; index++) {
+      var source = arguments[index],
+          keys = allKeys(source),
+          l = keys.length;
+      for (var i = 0; i < l; i++) {
+        var key = keys[i];
+        if (obj[key] === void 0) obj[key] = source[key];
+      }
+    }
+    return obj;
+}
+
+function tagTester(name) {
+  var tag = '[object ' + name + ']';
+  return function(obj) {
+    return toString.call(obj) === tag;
+  };
+}
+
+var isString = tagTester('String');
+
+var isNumber = tagTester('Number');
+
+var isDate = tagTester('Date');
+
+var isRegExp = tagTester('RegExp');
+
+var isError = tagTester('Error');
+
+var isSymbol = tagTester('Symbol');
+
+var isArrayBuffer = tagTester('ArrayBuffer');
+
+var isFunction = tagTester('Function');
+
+

@@ -16,5 +16,4 @@ wss.on('connection', (ws) => { // 在connection事件中，回调函数会传入
         }
     })
   });
-  wss.close();
 })
