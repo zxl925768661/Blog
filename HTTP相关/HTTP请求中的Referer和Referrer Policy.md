@@ -1,6 +1,6 @@
 ​
 # Referer
-> Referer请求头包含了当前请求页面的来源页面的地址，即表示当前页面是通过此来源页面里的链接进入的。服务端一般使用Referer（注：正确英语拼写应该是referrer，由于早期HTTP规范的拼写错误，为了保持向后兼容就一直延续下来）请求头识别访问来源，可能会以此统计分析、日志记录以及缓存优化等。   
+> Referer请求头包含了当前请求页面的来源页面的地址，即表示当前页面是通过此来源页面里的链接进入的。服务端一般使用Referer（注：`正确英语拼写应该是referrer，由于早期HTTP规范的拼写错误，为了保持向后兼容就一直延续下来`）请求头识别访问来源，可能会以此统计分析、日志记录以及缓存优化等。   
 
 ![](https://img-blog.csdnimg.cn/20201012205022107.png)   
 
@@ -75,7 +75,7 @@ Referrer-policy作用就是为了控制请求头中referer的内容
 我们只能从情况2入手，通过设置referer为空进行绕过防盗链。  
 
 ## 利用https网站盗链http资源网站，refer不会发送  
-先利用openssl生成自签名证书  
+先利用openssl生成自签名证书（具体可看https://github.com/zxl925768661/Blog/tree/main/HTTP%E7%9B%B8%E5%85%B3/Demos/referer/demo03）   
 client.js   
 
 ```js
@@ -429,6 +429,8 @@ if(window!=parent) {
 }
 ```
 
+注：   
+以上代码地址： https://github.com/zxl925768661/Blog/tree/main/HTTP%E7%9B%B8%E5%85%B3/Demos/referer  
 
 
 参考资料：
