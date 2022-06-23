@@ -76,8 +76,8 @@ interface IPerson {
 测试下:  
 ```js
 let person:IPerson = {
-  name: 'xman';
-  age: 18;
+  name: 'xman',
+  age: 18
 }
 person.name = 'zxx';  // Cannot assign to 'name' because it is a constant or a read-only property.
 ```
