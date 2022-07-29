@@ -236,6 +236,32 @@ interface PropertyDescriptor {
 }
 ```
 
+## 例3: 配合typeof使用 如： hasOwn方法  
+[vue-next hasOwn方法](https://github.com/GeekQiaQia/vue-next/blob/master/packages/shared/src/index.ts)---判断val是否含有属性key
+```js
+const hasOwnProperty = Object.prototype.hasOwnProperty
+export const hasOwn = (
+  val: object,
+  key: string | symbol
+): key is keyof typeof val => hasOwnProperty.call(val, key)
+```  
+回顾下`typeof`， 该操作符可以用来获取一个变量或对象的类型， 如下：  
+```js
+const obj = {
+  1: 'one',
+  2: 'two',
+  3: 'three'
+} 
+type k1 = keyof typeof obj;
+// typeof obj 的结果为 {
+//   1: string;
+//   2: string;
+//   3: string;
+// }
+// type k1 = 1 | 2 | 3
+```
+即`keyof typeof val`可以获取`val`所有键, 最后通过`is` 关键字判断参数是否属于这些键  
+
 最后， 如有错误，欢迎各位大佬指点！感谢！   
 
 

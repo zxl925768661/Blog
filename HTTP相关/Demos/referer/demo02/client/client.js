@@ -18,7 +18,8 @@ http.createServer(function (req, res) {
       res.writeHead(404, "Not Found");
       res.end("<h1>404 Not Found</h1>");
     } else {
-      res.writeHead(200, "OK");
+      // res.writeHead(200, "OK");
+      res.writeHead(200, { 'Content-Length': content.length, 'Transfer-Encoding': 'chunk'});
       res.write(content, "binary");
       res.end();
     }

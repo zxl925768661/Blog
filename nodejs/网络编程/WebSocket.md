@@ -117,9 +117,14 @@ ws.send(file);
 用于指定连接失败后的回调函数  
 
 ## 服务端实现  
-在这里我们使用ws实现  
+在这里我们使用`ws`实现  
 
-ws 是一个第三方的 websocket 通信模块，需要安装 npm i ws，websocket 的通信模型跟 HTTP 是一样的，服务端对应客户端模型  
+`ws` 是一个第三方的` websocket` 通信模块
+安装   
+```  
+npm i ws
+```  
+websocket 的通信模型跟 HTTP 是一样的，服务端对应客户端模型  
 
 ## 实例  
 ### ws实例
@@ -145,7 +150,7 @@ wss.on('connection', (ws) => { // 在connection事件中，回调函数会传入
   });
 })
 ```
-ws模块既包含了服务器端，又包含了客户端。ws的WebSocket就表示客户端，它其实就是WebSocketServer响应connection事件时回调函数传入的变量ws的类型  
+`ws`模块既包含了服务器端，又包含了客户端。`ws`的`WebSocket`就表示客户端，它其实就是`WebSocketServer`响应`connection`事件时回调函数传入的变量`ws`的类型  
 ```js
 const WebSocket = require('ws');
 const ws = new WebSocket('ws://localhost:3000');
@@ -308,7 +313,7 @@ server.listen(8124);
 
 为了解决以上两个问题，以前端作为主动方，定时发送 ping 消息，用于检测网络和前后端连接问题。当发现异常时，客户端可执行重连逻辑，直到重连成功。  
 
-如以下例子， 服务器端close后，前端收到通知等待一段时间关闭连接。
+如以下例子， 服务器端close后，前端收到通知等待一段时间关闭连接。  
 server.js  
 ```js
 const WebSocket = require('ws');

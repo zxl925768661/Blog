@@ -37,6 +37,7 @@ function fn (x: string | number) {
   // ...
 }
 ``` 
+以上代码中，在if条件判断中使用`typeof` 判断 变量`x`的类型是否是`string`类型  
 
 2. 获取对象的类型  
 ```js
@@ -155,7 +156,7 @@ var Direction;
   Right: 4,
 };
 ```
-对Direction使用typeof
+对`Direction`使用`typeof`
 ```js
 type Result = typeof Direction;
 
